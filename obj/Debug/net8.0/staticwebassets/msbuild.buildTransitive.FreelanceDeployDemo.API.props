@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../buildMultiTargeting/FreelanceDeployDemo.API.props" />
-</Project>

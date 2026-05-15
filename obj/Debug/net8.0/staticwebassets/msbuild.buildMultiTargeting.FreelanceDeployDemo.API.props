@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/FreelanceDeployDemo.API.props" />
-</Project>
