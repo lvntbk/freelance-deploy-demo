@@ -1,5 +1,7 @@
 # Freelance Deploy Demo API
 
+![CI](https://github.com/lvntbk/freelance-deploy-demo/actions/workflows/docker.yml/badge.svg)
+
 ASP.NET Core, PostgreSQL, Docker ve GitHub Actions kullanılarak geliştirilmiş modern backend ve deploy demo projesi.
 
 ## Özellikler
