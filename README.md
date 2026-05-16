@@ -4,6 +4,9 @@
 
 ASP.NET Core, PostgreSQL, Docker ve GitHub Actions kullanılarak geliştirilmiş modern backend ve deploy demo projesi.
 
+🟢 **[Canlı Swagger API Dokümantasyonu İçin Tıklayın](https://freelance-deploy-demo.onrender.com/swagger/index.html)**
+
+
 ## Özellikler
 
 * ASP.NET Core Web API
