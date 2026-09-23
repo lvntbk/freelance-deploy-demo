@@ -1,6 +1,55 @@
-@FreelanceDeployDemo.API_HostAddress = http://localhost:5076
+@baseUrl = http://localhost:8080
+@clientId = 1
+@projectId = 1
 
-GET {{FreelanceDeployDemo.API_HostAddress}}/weatherforecast/
+### Create a client. Set clientId above using the response.
+POST {{baseUrl}}/api/clients
+Content-Type: application/json
+
+{
+  "fullName": "Demo Client",
+  "companyName": "Demo Studio",
+  "email": "demo@example.test"
+}
+
+### List clients
+GET {{baseUrl}}/api/clients
 Accept: application/json
 
-###
+### Get a client
+GET {{baseUrl}}/api/clients/{{clientId}}
+Accept: application/json
+
+### Create a project. Set projectId above using the response.
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
+
+{
+  "projectName": "Portfolio API",
+  "technology": "ASP.NET Core",
+  "clientId": {{clientId}}
+}
+
+### List projects
+GET {{baseUrl}}/api/projects
+Accept: application/json
+
+### Get a project
+GET {{baseUrl}}/api/projects/{{projectId}}
+Accept: application/json
+
+### Update project status
+PUT {{baseUrl}}/api/projects/{{projectId}}/status
+Content-Type: application/json
+
+{
+  "status": "InProgress"
+}
+
+### Invalid status: expected response is 400
+PUT {{baseUrl}}/api/projects/{{projectId}}/status
+Content-Type: application/json
+
+{
+  "status": "Unknown"
+}

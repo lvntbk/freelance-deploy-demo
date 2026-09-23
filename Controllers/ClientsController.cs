@@ -1,3 +1,4 @@
+using FreelanceDeployDemo.API.Contracts.Clients;
 using FreelanceDeployDemo.API.Data;
 using FreelanceDeployDemo.API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,21 +18,70 @@ public class ClientsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetClients()
+    public async Task<ActionResult<List<ClientResponse>>> GetClients(
+        CancellationToken cancellationToken)
     {
         var clients = await _context.Clients
-            .Include(c => c.Projects)
-            .ToListAsync();
+            .AsNoTracking()
+            .OrderBy(c => c.Id)
+            .Select(c => new ClientResponse(
+                c.Id,
+                c.FullName,
+                c.CompanyName,
+                c.Email,
+                c.CreatedAt,
+                c.Projects.Count))
+            .ToListAsync(cancellationToken);
 
         return Ok(clients);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateClient(Client client)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<ClientResponse>> GetClient(
+        int id,
+        CancellationToken cancellationToken)
     {
-        _context.Clients.Add(client);
-        await _context.SaveChangesAsync();
+        var client = await _context.Clients
+            .AsNoTracking()
+            .Where(c => c.Id == id)
+            .Select(c => new ClientResponse(
+                c.Id,
+                c.FullName,
+                c.CompanyName,
+                c.Email,
+                c.CreatedAt,
+                c.Projects.Count))
+            .FirstOrDefaultAsync(cancellationToken);
 
-        return CreatedAtAction(nameof(GetClients), new { id = client.Id }, client);
+        if (client is null)
+            return NotFound();
+
+        return Ok(client);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<ClientResponse>> CreateClient(
+        CreateClientRequest request,
+        CancellationToken cancellationToken)
+    {
+        var client = new Client
+        {
+            FullName = request.FullName.Trim(),
+            CompanyName = request.CompanyName.Trim(),
+            Email = request.Email.Trim()
+        };
+
+        _context.Clients.Add(client);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        var response = new ClientResponse(
+            client.Id,
+            client.FullName,
+            client.CompanyName,
+            client.Email,
+            client.CreatedAt,
+            0);
+
+        return CreatedAtAction(nameof(GetClient), new { id = client.Id }, response);
     }
 }
